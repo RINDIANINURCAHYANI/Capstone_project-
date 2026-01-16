@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <title>Prediksi Churn Pelanggan Telekomunikasi</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+
+<div class="wrapper">
+
+    <!-- LEFT PANEL -->
+    <div class="left-panel">
+        <h1>Prediksi Churn Pelanggan</h1>
+        <p class="subtitle">
+            Logistic Regression & XGBoost <br>
+            Sistem Prediksi Retensi Pelanggan Telekomunikasi
+        </p>
+
+        <form method="POST">
+            <h2>Input Data Pelanggan</h2>
+
+            {% for col in num_cols %}
+            <label>{{ col }}</label>
+            <input type="number" step="any" name="{{ col }}" required>
+            {% endfor %}
+
+            {% for col in cat_cols %}
+            <label>{{ col }}</label>
+            <input type="text" name="{{ col }}" required>
+            {% endfor %}
+
+            <button type="submit">Prediksi</button>
+        </form>
+    </div>
+
+    <!-- RIGHT PANEL -->
+    <div class="right-panel">
+
+        {% if prediction %}
+        <div class="result-box">
+            <h2>Hasil Prediksi</h2>
+            <p class="prediction">{{ prediction }}</p>
+            <p class="prob">Probabilitas Churn: <b>{{ probability }}%</b></p>
+        </div>
+
+        <div class="charts">
+            <h2>Visualisasi Model</h2>
+
+            <div class="chart-grid">
+                <img src="{{ url_for('static', filename='plots/cm.png') }}">
+                <img src="{{ url_for('static', filename='plots/roc.png') }}">
+                <img src="{{ url_for('static', filename='plots/monthly.png') }}">
+            </div>
+        </div>
+        {% else %}
+        <div class="placeholder">
+            <h2>Silakan input data pelanggan</h2>
+            <p>Hasil prediksi dan grafik akan muncul di sini.</p>
+        </div>
+        {% endif %}
+
+    </div>
+
+</div>
+
+</body>
+</html>
