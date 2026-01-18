@@ -6,63 +6,188 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
 <body>
+<div class="container">
 
-<div class="wrapper">
+    <h1>Prediksi Churn Pelanggan Telekomunikasi</h1>
+    <p class="subtitle">Logistic Regression & XGBoost — Sistem Prediksi Retensi Pelanggan</p>
 
-    <!-- LEFT PANEL -->
-    <div class="left-panel">
-        <h1>Prediksi Churn Pelanggan</h1>
-        <p class="subtitle">
-            Logistic Regression & XGBoost <br>
-            Sistem Prediksi Retensi Pelanggan Telekomunikasi
-        </p>
+    <form method="POST">
 
-        <form method="POST">
-            <h2>Input Data Pelanggan</h2>
+        <div class="row">
 
-            {% for col in num_cols %}
-            <label>{{ col }}</label>
-            <input type="number" step="any" name="{{ col }}" required>
-            {% endfor %}
-
-            {% for col in cat_cols %}
-            <label>{{ col }}</label>
-            <input type="text" name="{{ col }}" required>
-            {% endfor %}
-
-            <button type="submit">Prediksi</button>
-        </form>
-    </div>
-
-    <!-- RIGHT PANEL -->
-    <div class="right-panel">
-
-        {% if prediction %}
-        <div class="result-box">
-            <h2>Hasil Prediksi</h2>
-            <p class="prediction">{{ prediction }}</p>
-            <p class="prob">Probabilitas Churn: <b>{{ probability }}%</b></p>
-        </div>
-
-        <div class="charts">
-            <h2>Visualisasi Model</h2>
-
-            <div class="chart-grid">
-                <img src="{{ url_for('static', filename='plots/cm.png') }}">
-                <img src="{{ url_for('static', filename='plots/roc.png') }}">
-                <img src="{{ url_for('static', filename='plots/monthly.png') }}">
+            <!-- NUMERIC -->
+            <div class="col">
+                <label>SeniorCitizen</label>
+                <select name="SeniorCitizen" required>
+                    <option value="0">0</option>
+                    <option value="1">1</option>
+                </select>
             </div>
-        </div>
-        {% else %}
-        <div class="placeholder">
-            <h2>Silakan input data pelanggan</h2>
-            <p>Hasil prediksi dan grafik akan muncul di sini.</p>
-        </div>
-        {% endif %}
 
+            <div class="col">
+                <label>Tenure</label>
+                <input type="number" name="tenure" step="1" required>
+            </div>
+
+            <div class="col">
+                <label>MonthlyCharges</label>
+                <input type="number" name="MonthlyCharges" step="0.01" required>
+            </div>
+
+            <div class="col">
+                <label>TotalCharges</label>
+                <input type="number" name="TotalCharges" step="0.01" required>
+            </div>
+
+        </div>
+
+        <!-- CATEGORICAL -->
+        <div class="row">
+
+            <div class="col">
+                <label>Gender</label>
+                <select name="gender" required>
+                    <option>Female</option>
+                    <option>Male</option>
+                </select>
+            </div>
+
+            <div class="col">
+                <label>Partner</label>
+                <select name="Partner" required>
+                    <option>Yes</option><option>No</option>
+                </select>
+            </div>
+
+            <div class="col">
+                <label>Dependents</label>
+                <select name="Dependents" required>
+                    <option>No</option><option>Yes</option>
+                </select>
+            </div>
+
+            <div class="col">
+                <label>PhoneService</label>
+                <select name="PhoneService" required>
+                    <option>Yes</option><option>No</option>
+                </select>
+            </div>
+
+        </div>
+
+        <div class="row">
+
+            <div class="col">
+                <label>MultipleLines</label>
+                <select name="MultipleLines" required>
+                    <option>No</option><option>Yes</option>
+                </select>
+            </div>
+
+            <div class="col">
+                <label>InternetService</label>
+                <select name="InternetService" required>
+                    <option>DSL</option>
+                    <option>Fiber optic</option>
+                    <option>No</option>
+                </select>
+            </div>
+
+            <div class="col">
+                <label>OnlineSecurity</label>
+                <select name="OnlineSecurity" required>
+                    <option>No</option><option>Yes</option>
+                </select>
+            </div>
+
+            <div class="col">
+                <label>OnlineBackup</label>
+                <select name="OnlineBackup" required>
+                    <option>No</option><option>Yes</option>
+                </select>
+            </div>
+
+        </div>
+
+        <div class="row">
+
+            <div class="col">
+                <label>DeviceProtection</label>
+                <select name="DeviceProtection" required>
+                    <option>No</option><option>Yes</option>
+                </select>
+            </div>
+
+            <div class="col">
+                <label>TechSupport</label>
+                <select name="TechSupport" required>
+                    <option>No</option><option>Yes</option>
+                </select>
+            </div>
+
+            <div class="col">
+                <label>StreamingTV</label>
+                <select name="StreamingTV" required>
+                    <option>No</option><option>Yes</option>
+                </select>
+            </div>
+
+            <div class="col">
+                <label>StreamingMovies</label>
+                <select name="StreamingMovies" required>
+                    <option>No</option><option>Yes</option>
+                </select>
+            </div>
+
+        </div>
+
+        <div class="row">
+
+            <div class="col">
+                <label>Contract</label>
+                <select name="Contract" required>
+                    <option>Month-to-month</option>
+                    <option>One year</option>
+                    <option>Two year</option>
+                </select>
+            </div>
+
+            <div class="col">
+                <label>PaperlessBilling</label>
+                <select name="PaperlessBilling" required>
+                    <option>Yes</option><option>No</option>
+                </select>
+            </div>
+
+            <div class="col">
+                <label>PaymentMethod</label>
+                <select name="PaymentMethod" required>
+                    <option>Electronic check</option>
+                    <option>Mailed check</option>
+                    <option>Bank transfer (automatic)</option>
+                    <option>Credit card (automatic)</option>
+                </select>
+            </div>
+
+        </div>
+
+        <button type="submit" class="btn-submit">Prediksi</button>
+    </form>
+
+    {% if prediction %}
+    <div class="result-box">
+        <h2>Hasil Prediksi</h2>
+        <p class="pred">{{ prediction }}</p>
+        <p class="prob">Probabilitas: {{ probability }}%</p>
+
+        <div class="plots">
+            <img src="{{ url_for('static', filename='plots/cm.png') }}">
+            <img src="{{ url_for('static', filename='plots/roc.png') }}">
+            <img src="{{ url_for('static', filename='plots/monthly.png') }}">
+        </div>
     </div>
+    {% endif %}
 
 </div>
-
 </body>
 </html>
