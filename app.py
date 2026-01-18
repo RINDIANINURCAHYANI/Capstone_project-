@@ -1,8 +1,6 @@
 from flask import Flask, render_template, request
 import pandas as pd
 import numpy as np
-import matplotlib.pyplot as plt
-import seaborn as sns
 import os
 
 from sklearn.preprocessing import StandardScaler, OneHotEncoder
@@ -32,7 +30,7 @@ cat_cols = X.select_dtypes(include="object").columns.tolist()
 num_cols = X.select_dtypes(exclude="object").columns.tolist()
 
 # ===============================
-# PREPROCESSOR (FIX UTAMA)
+# PREPROCESSOR
 # ===============================
 preprocessor = ColumnTransformer([
     ("num", StandardScaler(), num_cols),
@@ -69,11 +67,9 @@ def index():
     if request.method == "POST":
         input_dict = {}
 
-        # ----- numeric -----
         for col in num_cols:
             input_dict[col] = float(request.form[col])
 
-        # ----- categorical (NORMALISASI DI SINI) -----
         for col in cat_cols:
             val = request.form[col].strip().lower()
 
@@ -86,7 +82,6 @@ def index():
             input_dict[col] = val.capitalize()
 
         input_df = pd.DataFrame([input_dict])
-
         input_processed = preprocessor.transform(input_df)
 
         pred = model.predict(input_processed)[0]
@@ -96,8 +91,11 @@ def index():
         probability = round(prob * 100, 2)
 
         # ===============================
-        # PLOT
+        # PLOT (IMPORT DI SINI — FIX DEPLOY)
         # ===============================
+        import matplotlib.pyplot as plt
+        import seaborn as sns
+
         os.makedirs("static/plots", exist_ok=True)
 
         cm = confusion_matrix(y_test, model.predict(X_test))
